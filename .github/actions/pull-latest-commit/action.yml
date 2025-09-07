@@ -61,7 +61,8 @@ runs:
         key: ${{ inputs.ec2-key }}
         port: ${{ inputs.ec2-port }} # trigger gha
         script: |
-          BACKEND_DIRECTORY="${{ inputs.directory }}/apps/backend"
+          DIRECTORY="${{ inputs.directory }}"
+          BACKEND_DIRECTORY="$DIRECTORY/apps/backend"
           BACKEND_DIRECTORY_ENV="$BACKEND_DIRECTORY/.env"
 
           echo "MONGODB_URI=${{ inputs.backend-mongo-db-url }}" >> $BACKEND_DIRECTORY_ENV
@@ -70,6 +71,7 @@ runs:
           echo "OLLAMA_MODEL=${{ inputs.backend-ollama-model }}" >> $BACKEND_DIRECTORY_ENV
           echo "PORT=${{ inputs.backend-port }}" >> $BACKEND_DIRECTORY_ENV
 
+          cd $DIRECTORY
           git pull origin main
           rm -rf .turbo
           npm install
