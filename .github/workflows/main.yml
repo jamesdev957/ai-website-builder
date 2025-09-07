@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run custom action
-        uses: ./github/actions-pull-latest-commit
+        uses: ./github/actions/pull-latest-commit
         with:
           ec2-host: ${{ secrets.EC2_HOST }}
           ec2-user: ${{ secrets.EC2_USER }}
