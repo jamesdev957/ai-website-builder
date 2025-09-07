@@ -1,0 +1,29 @@
+{
+  "name": "ai-website-builder",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^20.8.0",
+    "turbo": "^1.10.12",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.21",
+    "tailwindcss": "^4.1.13",
+    "tsx": "^4.20.5"
+  }
+}
