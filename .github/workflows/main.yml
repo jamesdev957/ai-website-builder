@@ -19,5 +19,5 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.EC2_PASSWORD }}
-          port: ${{ variables.PORT }}
+          port: ${{ vars.PORT }}
           script: whoami
