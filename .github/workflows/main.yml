@@ -10,6 +10,11 @@ jobs:
     environment: main
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # get full history if needed
+
       - name: Run custom action
         uses: ./.github/actions/pull-latest-commit
         with:
