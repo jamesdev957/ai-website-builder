@@ -28,7 +28,9 @@ jobs:
     steps:
       - name: Pull Code from github
         run: |
-          ch /home/ec2-user/ai-website-builder
+          cd /home/ec2-user/ai-website-builder
           git pull origin main
+          rm -rf .turbo
+          npm run build
           pm2 stop ecosystem.config.js
           pm2 start ecosystem.config.js
