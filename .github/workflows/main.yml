@@ -1,0 +1,23 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    environment: main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build the project
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.EC2_PASSWORD }}
+          port: ${{ variables.PORT }}
+          script: whoami
