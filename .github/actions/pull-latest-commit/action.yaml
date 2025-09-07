@@ -1,0 +1,78 @@
+name: My Composite Action
+description: A simple composite action
+
+# PORT=3001
+# MONGODB_URI=mongodb://localhost:27017/ai-website-builder
+# OLLAMA_BASE_URL=http://localhost:11434/v1
+# OLLAMA_MODEL=llama3.1:8b
+# NODE_ENV=development
+
+inputs:
+  ec2-host:
+    description: "The hostname or domain of the EC2 server"
+    required: true
+  ec2-user:
+    description: "The username for connecting to the EC2 server"
+    required: true
+  ec2-ip:
+    description: "The public IP address of the EC2 instance"
+    required: true
+  ec2-key:
+    description: "The private SSH key for EC2 authentication (stored in GitHub Secrets)"
+    required: true
+  ec2-port:
+    description: "The SSH port for connecting to EC2 (default: 22)"
+    required: false
+    default: "22"
+  backend-mongo-db-url:
+    description: "MongoDB connection URI for the backend service"
+    required: true
+  backend-node-env:
+    description: "Node.js environment mode (e.g., development, production)"
+    required: true
+  backend-ollama-base-url:
+    description: "Base URL for the Ollama API endpoint"
+    required: true
+  backend-ollama-model:
+    description: "The AI model name to use in Ollama (e.g., llama3.1:8b)"
+    required: true
+  backend-port:
+    description: "The port on which the backend service will run"
+    required: true
+  directory:
+    description: The backend directory
+    required: false
+    default: /home/ec2-user/ai-website-builder
+  backend-directory:
+    description: "The backend directory (defaults to <directory>/app/backend)"
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: SSH To Server
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ${{ inputs.ec2-host }}
+        username: ${{ inputs.ec2-user }}
+        key: ${{ inputs.ec2-key }}
+        port: ${{ inputs.ec2-port }} # trigger gha
+        script: |
+          echo "BACKEND_DIRECTORY=${{ inputs.directory }}/app/backend" >> $GITHUB_ENV
+          echo "BACKEND_DIRECTORY_ENV=${{ inputs.directory }}/app/backend/.env" >> $GITHUB_ENV
+
+          echo "MONGODB_URI=${{ inputs.backend-mongo-db-url }}" >> $BACKEND_DIRECTORY_ENV
+          echo "NODE_ENV=${{ inputs.backend-node-env }}" >> $BACKEND_DIRECTORY_ENV
+          echo "OLLAMA_BASE_URL=${{ inputs.backend-ollama-base-url }}" >> $BACKEND_DIRECTORY_ENV
+          echo "OLLAMA_MODEL=${{ inputs.backend-ollama-model }}" >> $BACKEND_DIRECTORY_ENV
+          echo "PORT=${{ inputs.backend-port }}" >> $BACKEND_DIRECTORY_ENV
+
+          git pull origin main
+          rm -rf .turbo
+          npm install
+          npm run build
+          pm2 stop ecosystem.config.js
+          pm2 start ecosystem.config.js

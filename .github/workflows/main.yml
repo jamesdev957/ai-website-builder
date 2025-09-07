@@ -6,25 +6,20 @@ on:
       - main
 
 jobs:
-  ssh-to-server:
+  deploy:
     environment: main
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: SSH To Server
-        uses: appleboy/ssh-action@v0.1.8
+      - name: Run custom action
+        uses: ./github/actions-pull-latest-commit
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          port: ${{ vars.PORT }} # trigger gha
-          script: |
-            cd /home/ec2-user/ai-website-builder
-            git pull origin main
-            rm -rf .turbo
-            npm install
-            npm run build
-            pm2 stop ecosystem.config.js
-            pm2 start ecosystem.config.js
+          ec2-host: ${{ secrets.EC2_HOST }}
+          ec2-user: ${{ secrets.EC2_USER }}
+          ec2-ip: ${{ secrets.EC2_IP }}
+          ec2-key: ${{ secrets.EC2_KEY }}
+          ec2-port: ${{ vars.PORT }}
+          backend-mongo-db-url: ${{ vars.BACKEND_MONGODB_URI }}
+          backend-node-env: ${{ vars.BACKEND_NODE_ENV }}
+          backend-ollama-base-url: ${{ vars.BACKEND_OLLAMA_BASE_URL }}
+          backend-ollama-model: ${{ vars.BACKEND_OLLAMA_MODEL }}
+          backend-port: ${{ vars.BACKEND_PORT }}
