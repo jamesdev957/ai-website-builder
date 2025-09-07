@@ -61,8 +61,8 @@ runs:
         key: ${{ inputs.ec2-key }}
         port: ${{ inputs.ec2-port }} # trigger gha
         script: |
-          echo "BACKEND_DIRECTORY=${{ inputs.directory }}/app/backend" >> $GITHUB_ENV
-          echo "BACKEND_DIRECTORY_ENV=${{ inputs.directory }}/app/backend/.env" >> $GITHUB_ENV
+          BACKEND_DIRECTORY="${{ inputs.directory }}/app/backend"
+          BACKEND_DIRECTORY_ENV="$BACKEND_DIRECTORY/.env"
 
           echo "MONGODB_URI=${{ inputs.backend-mongo-db-url }}" >> $BACKEND_DIRECTORY_ENV
           echo "NODE_ENV=${{ inputs.backend-node-env }}" >> $BACKEND_DIRECTORY_ENV
