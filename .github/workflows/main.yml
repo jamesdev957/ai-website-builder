@@ -19,5 +19,5 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.USER }}
           password: ${{ secrets.EC2_PASSWORD }}
-          port: ${{ vars.PORT }}
+          port: ${{ vars.PORT }} # trigger gha
           script: whoami
